@@ -84,6 +84,11 @@ function fillScreen() {
 		.set('opacity', 1)
 		//.duration('1s')
 		.end();
+
+	if ($('#coder').text() != 'Software Engineer')
+		$('#coder').text('Software Engineer');
+	else
+		$('#coder').html('<a href="http://paulgraham.com/gba.html" target="_blank">Hacker</a>');
 }
 
 function clearBanner() {
