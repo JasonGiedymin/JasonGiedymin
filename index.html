@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Jason Giedymin</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			@font-face {
+				font-family: "appfont";
+				src: url("type/filename.eot");
+			}
+
+			body {
+				background-color: #000000;
+				margin: 0px;
+				overflow: hidden;
+				font-family:Monospace;
+				font-size:13px;
+				text-align:center;
+				font-weight: bold;
+				text-align:center;
+			}
+
+			a {
+				color:#0078ff;
+			}
+
+			#info {
+				color: #fff;
+				position: absolute;
+				top: 0px; width: 100%;
+				padding: 5px;
+				z-index: 100;
+			}
+
+			#codeInfo {
+				color: white;
+				background-color: rgba(100,100,100,0.2);
+				height: 75px;
+				width: 100%;
+				position: fixed;
+				z-index: 100;
+				margin-top: 50%;
+				margin-bottom: 50%;
+			}
+
+			#avatar {
+				position: absolute;
+				right: -250px;
+				top: -65px;
+				height: 200px;
+				width: 200px;
+
+				color: white;
+				background-color: rgba(100,100,100,1);
+			}
+
+			#avatar-frame {
+				position: relative;
+				top: 10px;
+			}
+
+			#avatar-img {
+				/*height: 180px;*/
+				width: 180px;
+			}
+
+			#snippet {
+				color: white;
+				background-color: rgba(200,100,150,.3);
+				height: 25px;
+				margin-top: 17px;
+				width: 300px;
+				left: -300px;
+				position: absolute;
+				font-size: 16px;
+				padding-top: 5px;
+			}
+
+			#banner-logo {
+				/*background-image: url('img/');
+				height: 100px;
+				width: 135px;
+				z-index: 99;
+				float: left;
+				position: absolute;*/
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="banner-logo">
+		</div>
+		<div id="codeInfo">
+			<div id="banner-title">
+				Jason Giedymin - Polyglot Software Engineer | <a href="http://blog.jason.giedymin.com">blog</a> | <a href="http://github.com/jasongiedymin">github</a>
+			</div>
+			<div id="snippet">
+				String getMyData()
+			</div>
+			<div id="avatar">
+				<div id="avatar-frame">
+					<img id="avatar-img"/>
+				</div>
+			</div>
+		</div>
+
+		<script src="js/zepto.min.js"></script>
+		<script src="js/move.min.js"></script>
+		<script src="js/Three.js"></script>
+
+		<script src="js/ShaderExtras.js"></script>
+		<script src="js/ShaderToon.js"></script>
+		<script src="js/ShaderExtras.js"></script>
+
+		<script src="js/postprocessing/EffectComposer.js"></script>
+		<script src="js/postprocessing/RenderPass.js"></script>
+		<script src="js/postprocessing/BloomPass.js"></script>
+		<script src="js/postprocessing/ShaderPass.js"></script>
+		<script src="js/postprocessing/MaskPass.js"></script>
+		<script src="js/postprocessing/SavePass.js"></script>
+
+
+		<script src="js/Detector.js"></script>
+		<script src="js/Stats.js"></script>
+
+		<script type="x-shader/x-vertex" id="vertexshader">
+			uniform float amplitude;
+			attribute float size;
+			attribute vec3 customColor;
+
+			varying vec3 vColor;
+
+			void main() {
+				vColor = customColor;
+				vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+				//gl_PointSize = size; // heat map
+				gl_PointSize = size * ( 200.0 / length( mvPosition.xyz ) );
+				gl_Position = projectionMatrix * mvPosition;
+			}
+		</script>
+
+		<script type="x-shader/x-fragment" id="fragmentshader">
+			uniform vec3 color;
+			uniform sampler2D texture;
+			varying vec3 vColor;
+			void main() {
+				gl_FragColor = vec4( color * vColor, 1.25 );
+				gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
+			}
+		</script>
+
+		<script src="js/part_engine.js"></script>
+		<script src="js/part_images.js"></script>
+		<script src="js/part_timing.js"></script>
+
+		<script type="x-shader/x-vertex" id="vertexshader2">
+	      varying float vZ;
+	      uniform float time;
+	      void main() {
+	        vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+	        mvPosition.y += 20.0*sin(time*0.5+mvPosition.x/25.0);
+	        mvPosition.x += 30.0*cos(time*0.5+mvPosition.y/25.0);
+	        vec4 p = projectionMatrix * mvPosition;
+	        vZ = p.z;
+	        gl_Position = p;
+	      }
+	    </script>
+
+	    <script type="x-shader/x-fragment" id="fragmentshader2">
+	      varying float vZ;
+	      uniform float time;
+	      uniform vec2 size;
+	      void main() {
+	        vec2 d = gl_FragCoord.xy - (0.5+0.02*sin(time))*size;
+	        float a = sin(time*0.3)*2.0*3.14159;
+	        d = vec2( d.x*cos(a) + d.y*sin(a),
+	                 -d.x*sin(a) + d.y*cos(a));
+	        vec2 rg = vec2(1.0)-abs(d)/(0.5*size)
+	        float b = abs(vZ) / 160.0;
+	        gl_FragColor = vec4(rg,b,1.0);
+	      }
+	    </script>
+	</body>
+</html>

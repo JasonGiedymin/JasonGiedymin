@@ -1,0 +1,16 @@
+To use locally:
+
+Create a new shortcut to chrome.
+In the target field add:
+
+your chrome location>\chrome --allow-file-access-from-files
+
+Once open, navigate to the html file.
+
+If any errors occur, they will be logged on the console.
+
+Instructions:
+
+- Left Mouse click to add more particles
+- There are a lot of timing events, so watch the demo. Some events don't fire until the 20second or 60second mark. One even fires every 60minutes
+- Moving the mouse wll adjust the camera, give that a whirl
