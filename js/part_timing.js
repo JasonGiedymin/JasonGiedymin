@@ -1,4 +1,3 @@
-
 function createWorld() {
 	init();
 	animate();
@@ -119,6 +118,15 @@ function cameraBurst() {
 	camera.position.x += ( track - camera.position.x ) * 0.05;
 	camera.position.y += ( - track - camera.position.y ) * 0.05;
 }
+
+function addLotsOfParticles() { 
+	addParticles();
+	var particles = getParticleCount();
+	if (particles % 25000 === 0) {
+		console.log("Particles: " + particles);
+	}
+}
+//setInterval(addLotsOfParticles, 10);
 
 setTimeout(createWorld, 100);
 setInterval(moveAvatar, 5000)
