@@ -120,13 +120,18 @@ function cameraBurst() {
 }
 
 function addLotsOfParticles() { 
-	addParticles();
-	var particles = getParticleCount();
-	if (particles % 25000 === 0) {
-		console.log("Particles: " + particles);
-	}
+  function add() {
+    addParticles();
+    var particles = getParticleCount();
+    if (particles % 25000 === 0) {
+      console.log("Particles: " + particles);
+    }
+  }
+
+  if( confirm("This will add as many particles possible, your browser may hang. Are you sure?") ) {
+    setInterval(add, 10);
+  }
 }
-//setInterval(addLotsOfParticles, 10);
 
 setTimeout(createWorld, 100);
 setInterval(moveAvatar, 5000)
